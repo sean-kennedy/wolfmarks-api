@@ -44,11 +44,9 @@ module.exports = function(req, res, next) {
 		if (err) return res.json(401, {err: 'The token is not valid'});
 		
 		// Verify User still exists/isn't banned etc
-		User.findOne({ id: token.sid }).exec(function(err, user) {
-		
-			console.log(user);
+		User.findOneById(token.sid, function(err, user) {
 			
-			if (!user || err) return res.json(401, {err: 'The token is not validz'});
+			if (!user || err) return res.json(401, {err: 'The token is not valid'});
 			
 			req.token = token;
 	
