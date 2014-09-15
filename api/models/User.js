@@ -33,15 +33,17 @@ module.exports = {
 		bookmarks: {
 			collection: 'bookmark',
 			via: 'user'	
-		}
+		},
+		
+		// Attribute Methods
+		
+	    getFullName: function() {
+	    	return this.firstName + ' ' + this.lastName;
+	    }
 		
 	},
 	
-	// Attribute methods
-	
-    getFullName: function() {
-    	return this.firstName + ' ' + this.lastName;
-    },
+	// Methods
     
 	validPassword: function(password, user, cb) {
 		/*bcrypt.compare(password, user.encryptedPassword, function(err, match) {

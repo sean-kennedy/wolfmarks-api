@@ -32,9 +32,13 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
   
+  // Index
+  
   '/': 'IndexController.index',
   
   '/api/v1': 'IndexController.index',
+  
+  // Auth
   
   '/api/v1/auth': 'AuthController.authenticate',
   

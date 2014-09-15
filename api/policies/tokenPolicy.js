@@ -1,5 +1,5 @@
 /**
- * tokenAuth
+ * tokenPolicy
  *
  * @module      :: Policy
  * @description :: Simple policy to allow any authenticated user
@@ -39,7 +39,7 @@ module.exports = function(req, res, next) {
 		return res.json(401, {err: 'No Authorization header was found'});
 	}
 	
-	sailsTokenAuth.verifyToken(token, function(err, token) {
+	tokenService.verifyToken(token, function(err, token) {
 	
 		if (err) return res.json(401, {err: 'The token is not valid'});
 		
@@ -49,6 +49,7 @@ module.exports = function(req, res, next) {
 			if (!user || err) return res.json(401, {err: 'The token is not valid'});
 			
 			req.token = token;
+			req.user = user;
 	
 			next();
 			
