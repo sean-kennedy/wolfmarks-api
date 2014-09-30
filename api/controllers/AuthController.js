@@ -43,26 +43,32 @@ module.exports = {
 			passwordConfirm = req.param('password_confirm');
 		
 		if (!firstName || !lastName || !email || !password || !passwordConfirm) {
-			return res.json(401, {err: 'Insufficient data supplied'});
+			return res.json(401, {err: 'Required fields missing'});
 		}
 		
 		if (req.param('password') !== req.param('password_confirm')) {
 			return res.json(401, {err: 'Password doesn\'t match'});
 		}
 		
-		User.create({
-			firstName: firstName,
-			lastName: lastName,
-			email: email,
-			password: password
-		}).exec(function(err, user) {
+		User.findOneByEmail(email, function(err, user) {
 		
-			if (err) return res.json(err.status, {err: err});
+			if (user) return res.json(401, {err: 'A user with that email already exists'});
 			
-			if (user) {
-				res.json({user: user, token: tokenService.issueToken({sid: user.id})});
-			}
-		
+			User.create({
+				firstName: firstName,
+				lastName: lastName,
+				email: email,
+				password: password
+			}).exec(function(err, user) {
+			
+				if (err) return res.json(err.status, {err: err});
+				
+				if (user) {
+					res.json({user: user, token: tokenService.issueToken({sid: user.id})});
+				}
+			
+			});
+			
 		});
 	  
 	}
