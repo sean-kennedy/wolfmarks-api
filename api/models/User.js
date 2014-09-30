@@ -20,7 +20,7 @@ module.exports = {
 		},
 		
 		email: {
-			type: 'string',
+			type: 'email',
 			unique: true
 		},
 		
@@ -58,4 +58,3 @@ module.exports = {
 	}
 	
 };
-
