@@ -5,6 +5,9 @@
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
 
+var shortId = require('shortid'),
+	bcrypt = require('bcrypt');
+
 module.exports = {
 	
 	attributes: {
@@ -29,7 +32,8 @@ module.exports = {
 		},
 		
 		slug: {
-			type: 'string'	
+			type: 'string',
+			unique: true
 		},
 		
 		// Associations
@@ -43,6 +47,12 @@ module.exports = {
 		
 	    getFullName: function() {
 	    	return this.firstName + ' ' + this.lastName;
+	    },
+	    
+	   	toJSON: function() {
+			var obj = this.toObject();
+			delete obj.password;
+			return obj;
 	    }
 		
 	},
@@ -50,15 +60,56 @@ module.exports = {
 	// Methods
     
 	validPassword: function(password, user, cb) {
-		/*bcrypt.compare(password, user.encryptedPassword, function(err, match) {
+	
+		bcrypt.compare(password, user.password, function(err, match) {
+		
 			if (err) cb(err);
+			
 			if (match) {
 				cb(null, true);
 			} else {
 				cb(err);
 			}
-		});*/
-		cb(null, true);
+			
+		});
+
+	},
+	
+	validSlug: function(slug, cb) {
+	
+		User.findOneBySlug(slug, function(err, user) {
+		
+			if (err) cb(err);
+			
+			if (!user) {
+				cb(null, true);
+			} else {
+				cb(err);
+			}
+			
+		});
+
+	},
+	
+	// Lifecycle Callbacks
+	
+	beforeCreate: function(values, cb) {
+		
+		bcrypt.hash(values.password, 10, function(err, hash) {
+		
+			if(err) return cb(err);
+			
+			newId = shortId.generate();
+			
+			values.password = hash;
+			values.id = newId;
+			values.slug = newId;
+			values.bookmarks = [];
+			
+			cb();
+			
+		});
+	
 	}
 	
 };

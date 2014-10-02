@@ -46,9 +46,11 @@ module.exports.routes = {
   
   // Users
   
-  '/api/v1/users': 'UserController.findAll',
+  'GET /api/v1/users': 'UserController.find',
   
-  '/api/v1/users/:slug': 'UserController.find'
+  'GET /api/v1/users/:id': 'UserController.findOne',
+  
+  'PUT /api/v1/users/:id': 'UserController.update'
 
   /***************************************************************************
   *                                                                          *

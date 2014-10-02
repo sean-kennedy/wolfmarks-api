@@ -22,11 +22,11 @@ module.exports = {
 		
 			User.validPassword(password, user, function(err, valid) {
 			
-				if (err) return res.json(403, {err: 'forbidden'});
+				if (err) return res.json(err.status, {err: err});
 		
-				if (!valid) return res.json(401, {err: 'invalid email or password'});
+				if (!valid) return res.json({err: 'invalid email or password'});
 				
-				res.json({user: user, token: tokenService.issueToken({sid: user.id})});
+				return res.json({user: user, token: tokenService.issueToken({sid: user.id})});
 				
 			});
 			
@@ -49,19 +49,17 @@ module.exports = {
 		
 			if (user) return res.json(401, {err: 'A user with that email already exists'});
 			
-			// TODO: Validate user credentials, encrypt password
 			User.create({
 				firstName: firstName,
 				lastName: lastName,
 				email: email,
-				password: password,
-				slug: firstName.toLowerCase() + '-' + lastName.toLowerCase()
+				password: password
 			}).exec(function(err, user) {
 			
 				if (err) return res.json(err.status, {err: err});
 				
 				if (user) {
-					res.json({user: user, token: tokenService.issueToken({sid: user.id})});
+					return res.json({user: user, token: tokenService.issueToken({sid: user.id})});
 				}
 			
 			});

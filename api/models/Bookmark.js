@@ -29,6 +29,15 @@ module.exports = {
 			model: 'tag'
 		}
 		
+	},
+	
+	// Lifecycle Callbacks
+	
+	beforeCreate: function(values, cb) {
+	
+		values.id = shortId.generate();
+		cb();
+	
 	}
 	
 };

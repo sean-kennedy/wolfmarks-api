@@ -15,6 +15,15 @@ module.exports = {
 			type: 'string'
 		}
 
+	},
+	
+	// Lifecycle Callbacks
+	
+	beforeCreate: function(values, cb) {
+	
+		values.id = shortId.generate();
+		cb();
+	
 	}
 	
 };
