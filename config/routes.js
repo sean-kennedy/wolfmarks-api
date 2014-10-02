@@ -40,9 +40,15 @@ module.exports.routes = {
   
   // Auth
   
-  '/api/v1/auth': 'AuthController.authenticate',
+  '/api/v1/auth/login': 'AuthController.login',
   
-  '/api/v1/auth/register': 'AuthController.register'
+  '/api/v1/auth/register': 'AuthController.register',
+  
+  // Users
+  
+  '/api/v1/users': 'UserController.findAll',
+  
+  '/api/v1/users/:slug': 'UserController.find'
 
   /***************************************************************************
   *                                                                          *

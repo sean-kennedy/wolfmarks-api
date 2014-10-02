@@ -2,7 +2,7 @@
  * tokenPolicy
  *
  * @module      :: Policy
- * @description :: Simple policy to allow any authenticated user
+ * @description :: Policy to check verify token authenticity
  * @docs        :: http://sailsjs.org/#!documentation/policies
  *
  */

@@ -28,6 +28,10 @@ module.exports = {
 			type: 'string'
 		},
 		
+		slug: {
+			type: 'string'	
+		},
+		
 		// Associations
 		
 		bookmarks: {

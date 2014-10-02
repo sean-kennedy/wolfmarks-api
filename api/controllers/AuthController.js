@@ -7,7 +7,7 @@
 
 module.exports = {
 
-	authenticate: function(req, res) {
+	login: function(req, res) {
 	
 	  	var email = req.param('email'),
 	  		password = req.param('password');
@@ -39,26 +39,23 @@ module.exports = {
 		var firstName = req.param('first_name'),
 			lastName = req.param('last_name'),
 			email = req.param('email'),
-			password = req.param('password'),
-			passwordConfirm = req.param('password_confirm');
+			password = req.param('password');
 		
-		if (!firstName || !lastName || !email || !password || !passwordConfirm) {
+		if (!firstName || !lastName || !email || !password) {
 			return res.json(401, {err: 'Required fields missing'});
-		}
-		
-		if (req.param('password') !== req.param('password_confirm')) {
-			return res.json(401, {err: 'Password doesn\'t match'});
 		}
 		
 		User.findOneByEmail(email, function(err, user) {
 		
 			if (user) return res.json(401, {err: 'A user with that email already exists'});
 			
+			// TODO: Validate user credentials, encrypt password
 			User.create({
 				firstName: firstName,
 				lastName: lastName,
 				email: email,
-				password: password
+				password: password,
+				slug: firstName.toLowerCase() + '-' + lastName.toLowerCase()
 			}).exec(function(err, user) {
 			
 				if (err) return res.json(err.status, {err: err});
