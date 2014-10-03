@@ -40,17 +40,23 @@ module.exports.routes = {
   
   // Auth
   
-  '/api/v1/auth/login': 'AuthController.login',
-  
-  '/api/v1/auth/register': 'AuthController.register',
+  '/api/v1/auth': 'AuthController.login',
   
   // Users
   
   'GET /api/v1/users': 'UserController.find',
   
+  'POST /api/v1/users': 'UserController.create',
+  
   'GET /api/v1/users/:id': 'UserController.findOne',
   
-  'PUT /api/v1/users/:id': 'UserController.update'
+  'PUT /api/v1/users/:id': 'UserController.update',
+  
+  'DELETE /api/v1/users/:id': 'UserController.destroy', 
+  
+  // Bookmarks
+  
+  '/api/v1/bookmarks': 'BookmarksController.find'
 
   /***************************************************************************
   *                                                                          *

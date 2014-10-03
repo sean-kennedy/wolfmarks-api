@@ -8,7 +8,9 @@
 module.exports = {
 
 	index: function(req, res) {
-		res.jsonx({ 'message': 'Welcome to the v1 API' });
+	
+		res.json({ 'message': 'Welcome to the v1 API' });
+		
 	}
 	
 };

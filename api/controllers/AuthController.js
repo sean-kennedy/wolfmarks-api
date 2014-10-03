@@ -12,11 +12,9 @@ module.exports = {
 	  	var email = req.param('email'),
 	  		password = req.param('password');
 	
-		if (!email || !password) {
-			return res.json(401, {err: 'email and password required'});
-		}
+		if (!email || !password) return res.json(401, {err: 'email and password required'});
 		
-		User.findOneByEmail(email, function(err, user) {
+		User.findOneByEmail(email).exec(function(err, user) {
 		
 			if (!user) return res.json(401, {err: 'invalid email or password'});
 		
@@ -32,40 +30,6 @@ module.exports = {
 			
 		});
 		
-	},
-	
-	register: function(req, res) {
-	
-		var firstName = req.param('first_name'),
-			lastName = req.param('last_name'),
-			email = req.param('email'),
-			password = req.param('password');
-		
-		if (!firstName || !lastName || !email || !password) {
-			return res.json(401, {err: 'Required fields missing'});
-		}
-		
-		User.findOneByEmail(email, function(err, user) {
-		
-			if (user) return res.json(401, {err: 'A user with that email already exists'});
-			
-			User.create({
-				firstName: firstName,
-				lastName: lastName,
-				email: email,
-				password: password
-			}).exec(function(err, user) {
-			
-				if (err) return res.json(err.status, {err: err});
-				
-				if (user) {
-					return res.json({user: user, token: tokenService.issueToken({sid: user.id})});
-				}
-			
-			});
-			
-		});
-	  
 	}
 	
 };

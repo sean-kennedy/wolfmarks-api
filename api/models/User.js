@@ -1,14 +1,17 @@
 /**
 * User.js
 *
-* @description :: TODO: You might write a short summary of how this model works and what it represents here.
+* @description :: User model
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
 
 var shortId = require('shortid'),
-	bcrypt = require('bcrypt');
+	bcrypt = require('bcrypt'),
+	Q = require('q');
 
 module.exports = {
+
+	schema: true,
 	
 	attributes: {
 	
@@ -51,13 +54,23 @@ module.exports = {
 	    
 	   	toJSON: function() {
 			var obj = this.toObject();
-			delete obj.password;
+			//delete obj.password;
 			return obj;
 	    }
 		
 	},
 	
 	// Methods
+	
+	removeNotEditable: function(updates) {
+	
+		delete updates.createdAt;
+		delete updates.updatedAt;
+		delete updates.id;
+		
+		return updates;
+		
+	},
     
 	validPassword: function(password, user, cb) {
 	
@@ -97,19 +110,38 @@ module.exports = {
 		
 		bcrypt.hash(values.password, 10, function(err, hash) {
 		
-			if(err) return cb(err);
+			if (err) return cb(err);
 			
 			newId = shortId.generate();
 			
 			values.password = hash;
 			values.id = newId;
 			values.slug = newId;
-			values.bookmarks = [];
 			
 			cb();
 			
 		});
 	
+	},
+	
+	beforeUpdate: function(values, cb) {
+	
+		if (values.password) {
+		
+			bcrypt.hash(values.password, 10, function(err, hash) {
+			
+				if (err) return cb(err);
+				
+				values.password = hash;
+				
+				cb();
+			
+			});
+		
+		} else {
+			cb();
+		}
+		
 	}
 	
 };
