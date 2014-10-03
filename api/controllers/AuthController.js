@@ -18,7 +18,7 @@ module.exports = {
 		
 			if (!user) return res.json(401, {err: 'invalid email or password'});
 		
-			User.validPassword(password, user, function(err, valid) {
+			User.validatePassword(password, user, function(err, valid) {
 			
 				if (err) return res.json(err.status, {err: err});
 		

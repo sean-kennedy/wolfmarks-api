@@ -45,20 +45,45 @@ module.exports = {
 	
 	create: function(req, res) {
 	
-		var firstName = req.query.firstName,
-			lastName = req.query.lastName,
-			email = req.query.email,
-			password = req.query.password;
-			
-			console.log(req.query);
+		var newUser = {};
 		
-		if (!email || !password) {
+		newUser.firstName = req.query.firstName;
+		newUser.lastName = req.query.lastName;
+		newUser.email = req.query.email;
+		newUser.password = req.query.password;
+		newUser.slug = req.query.slug;
+		
+		/*if (!email || !password) {
 			return res.json(401, {err: 'Required fields missing'});
-		}
+		}*/
 		
-		User.findOneByEmail(email).exec(function(err, user) {
+		User.create(newUser).exec(function(err, user) {
 		
-			if (user) return res.json(401, {err: 'A user with that email already exists'});
+			if (err) {
+			
+			    if (err.ValidationError) {
+			    
+			        errors = handleValidation.transformValidation(User, err.ValidationError);
+			        return res.json({
+			            success:false,
+			            errors: errors
+			        });
+			        
+			    } else {
+				    return res.json(err.status, {err: err});
+			    }
+			    
+			}
+			
+			return res.json({user: user, token: tokenService.issueToken({sid: user.id})});
+			
+		});
+		
+		/*User.validateUnique('email', email, function(err, valid) {
+		
+			if (err) return res.json(err.status, {err: err});
+		
+			if (!valid) return res.json(401, {err: 'A user with that email already exists'});
 			
 			User.create({
 				firstName: firstName,
@@ -73,7 +98,7 @@ module.exports = {
 			
 			});
 			
-		});
+		});*/
 	  
 	},
 	
@@ -84,41 +109,17 @@ module.exports = {
 		
 		updates = User.removeNotEditable(updates);
 		
-		// TODO: Add promise chain to validate unique fields (slug, email)
+		User.update({id: id}).set(updates).exec(function(err, users) {
 		
-		if (updates.slug) {
-		
-			User.validSlug(updates.slug, function(err, valid) {
+			if (err) return res.json(err.status, {err: err});
 			
-				if (err) return res.json(err.status, {err: err});
+			if (!users.length == 0) {
+				return res.json({ status: 200, message: 'User updated', attributes: users }, 200);
+			} else {
+				return res.json({ status: 400, message: 'No record found for that ID' }, 400);
+			}
 		
-				if (!valid) return res.json({err: 'Slug already in use'});
-				
-				runUpdate();
-				
-			});
-			
-		} else {
-			runUpdate();
-		}
-		
-		runUpdate();
-		
-		function runUpdate() {
-		
-			User.update({id: id}).set(updates).exec(function(err, users) {
-			
-				if (err) return res.json(err.status, {err: err});
-				
-				if (!users.length == 0) {
-					return res.json({ status: 200, message: 'User updated', attributes: users }, 200);
-				} else {
-					return res.json({ status: 400, message: 'No record found for that ID' }, 400);
-				}
-			
-			});
-		
-		}
+		});
 		
 	},
 	
