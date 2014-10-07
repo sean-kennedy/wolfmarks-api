@@ -111,7 +111,21 @@ module.exports = {
 		
 		User.update({id: id}).set(updates).exec(function(err, users) {
 		
-			if (err) return res.json(err.status, {err: err});
+			if (err) {
+			
+			    if (err.ValidationError) {
+			    
+			        errors = handleValidation.transformValidation(User, err.ValidationError);
+			        return res.json({
+			            success:false,
+			            errors: errors
+			        });
+			        
+			    } else {
+				    return res.json(err.status, {err: err});
+			    }
+			    
+			}
 			
 			if (!users.length == 0) {
 				return res.json({ status: 200, message: 'User updated', attributes: users }, 200);

@@ -6,8 +6,8 @@
 */
 
 var shortId = require('shortid'),
-	bcrypt = require('bcrypt'),
-	Q = require('q');
+	bcrypt = require('bcrypt');
+	//Q = require('q');
 
 module.exports = {
 
@@ -160,6 +160,26 @@ module.exports = {
 		});
 	
 	},
+	
+	beforeUpdate: function(values, cb) {
+	
+		if (values.password) {
+		
+			User.encryptPassword(values.password, function(err, hash) {
+				
+				if (err) return cb(err);
+				
+				values.password = hash;
+				
+				cb();
+				
+			});
+			
+		} else {
+			cb();
+		}
+	
+	}
 	
 	/*beforeUpdate: function(values, cb) {
 	
