@@ -36,11 +36,6 @@ module.exports = {
 			required: true
 		},
 		
-		slug: {
-			type: 'string',
-			unique: true
-		},
-		
 		// Associations
 		
 		bookmarks: {
@@ -74,10 +69,6 @@ module.exports = {
         
         password: {
         	required: 'Password required'
-        },
-        
-        slug: {
-	        unique: 'Slug is already in use'
         }
         
     },
@@ -153,7 +144,6 @@ module.exports = {
 		
 			values.password = hash;
 			values.id = newId;
-			if (!values.slug) values.slug = newId;
 			
 			cb();
 			

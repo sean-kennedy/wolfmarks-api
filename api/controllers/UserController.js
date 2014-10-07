@@ -22,22 +22,14 @@ module.exports = {
 	findOne: function(req, res) {
 	
 		var id = req.params.id;
-		
-		User.findOneBySlug(id).exec(function(err, user) {
-		
+				
+		User.findOneById(id).exec(function(err, user) {
+			
 			if (err) return res.json(err.status, {err: err});
 			
-			if (user) return res.json(user);
-				
-			User.findOneById(id).exec(function(err, user) {
-				
-				if (err) return res.json(err.status, {err: err});
-				
-				if (!user) return res.json({err: 'User not found'});
-				
-				return res.json(user);
-				
-			});
+			if (!user) return res.json({err: 'User not found'});
+			
+			return res.json(user);
 			
 		});
 		
@@ -51,7 +43,6 @@ module.exports = {
 		newUser.lastName = req.query.lastName;
 		newUser.email = req.query.email;
 		newUser.password = req.query.password;
-		newUser.slug = req.query.slug;
 		
 		/*if (!email || !password) {
 			return res.json(401, {err: 'Required fields missing'});
