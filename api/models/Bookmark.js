@@ -5,7 +5,11 @@
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
 
+var shortId = require('shortid');
+
 module.exports = {
+
+	schema: true,
 	
 	attributes: {
 	
@@ -15,19 +19,51 @@ module.exports = {
 			type: 'string'
 		},
 		
-		url: {
+		description: {
 			type: 'string'
+		},
+		
+		url: {
+			type: 'string',
+			required: true
 		},
 		
 		// Associations
 		
 		user: {
-			model: 'user'	
+			model: 'user',
+			required: true
 		},
 		
 		tags: {
 			model: 'tag'
 		}
+		
+	},
+	
+	// Validation Messages
+	
+    validationMessages: {
+    
+        url: {
+            required: 'Url required',
+        },
+        
+        user: {
+        	required: 'User required'
+        }
+        
+    },
+	
+	// Methods
+	
+	removeNotEditable: function(updates) {
+	
+		delete updates.createdAt;
+		delete updates.updatedAt;
+		delete updates.id;
+		
+		return updates;
 		
 	},
 	

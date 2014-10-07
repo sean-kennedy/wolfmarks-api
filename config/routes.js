@@ -56,7 +56,15 @@ module.exports.routes = {
   
   // Bookmarks
   
-  '/api/v1/bookmarks': 'BookmarksController.find'
+  'GET /api/v1/bookmarks': 'BookmarkController.find',
+  
+  'POST /api/v1/bookmarks': 'BookmarkController.create',
+  
+  'GET /api/v1/bookmarks/:id': 'BookmarkController.findOne',
+  
+  'PUT /api/v1/bookmarks/:id': 'BookmarkController.update',
+  
+  'DELETE /api/v1/bookmarks/:id': 'BookmarkController.destroy', 
 
   /***************************************************************************
   *                                                                          *

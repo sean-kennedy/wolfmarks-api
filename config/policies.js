@@ -19,9 +19,9 @@
 
 module.exports.policies = {
 
-	//'*': 'tokenPolicy',
+	'*': 'tokenPolicy',
 	
-	'*': true,
+	//'*': true,
 	
 	'UserController': {
 		create: true
